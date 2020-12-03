@@ -1,6 +1,5 @@
 package lesson5;
 
-import kotlin.NotImplementedError;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.AbstractSet;
@@ -16,6 +15,8 @@ public class OpenAddressingSet<T> extends AbstractSet<T> {
     private final Object[] storage;
 
     private int size = 0;
+
+    private final Object deleted = new Object();
 
     private int startingIndex(Object element) {
         return element.hashCode() & (0x7FFFFFFF >> (31 - bits));
@@ -63,11 +64,12 @@ public class OpenAddressingSet<T> extends AbstractSet<T> {
      * но в данном случае это было введено для упрощения кода.
      */
     @Override
-    public boolean add(T t) {
+    public boolean add(Object t) {
         int startingIndex = startingIndex(t);
         int index = startingIndex;
         Object current = storage[index];
         while (current != null) {
+            if (current == deleted) break; // если элемент удален
             if (current.equals(t)) {
                 return false;
             }
@@ -93,9 +95,23 @@ public class OpenAddressingSet<T> extends AbstractSet<T> {
      *
      * Средняя
      */
+
+// Трудоемкость - O(n), Ресурсоемкость - О(1)
     @Override
     public boolean remove(Object o) {
-        return super.remove(o);
+        if (!contains(o)) return false;
+        int i = startingIndex(o);
+        Object current = storage[i];
+        while (current != null && current != deleted) {
+            if (current.equals(o)) {
+                storage[i] = deleted;
+                size--;
+                return true;
+            }
+            i = (i + 1) % capacity;
+            current = storage[i];
+        }
+        return false;
     }
 
     /**
@@ -107,11 +123,50 @@ public class OpenAddressingSet<T> extends AbstractSet<T> {
      * Спецификация: {@link Iterator} (Ctrl+Click по Iterator)
      *
      * Средняя (сложная, если поддержан и remove тоже)
+     * @return
      */
     @NotNull
     @Override
     public Iterator<T> iterator() {
-        // TODO
-        throw new NotImplementedError();
+        return new OpenAddressingSetIterator();
+    }
+
+    public class OpenAddressingSetIterator implements Iterator<T> {
+
+        private T current;
+        private int i = 0;
+        private int count = 0;
+
+        // Трудоемкость - O(1), Ресурсоемкость - О(1)
+        @Override
+        public boolean hasNext(){
+            return count < size;
+        }
+
+        // Трудоемкость - O(n), Ресурсоемкость - О(1)
+        @Override
+        public T next() {
+            if (hasNext()) {
+                while (storage[i] == null || storage[i] == deleted) {
+                    i++;
+                }
+                count++;
+                current = (T) storage[i];
+                i++;
+                return current;
+            }
+            throw new IllegalStateException();
+        }
+
+        // Трудоемкость - O(n), Ресурсоемкость - О(1)
+        @Override
+        public void remove() {
+            if (current != null && current != deleted) {
+            storage[i - 1] = deleted;
+            size--;
+            count--;
+            }
+            else throw new  IllegalStateException();
+        }
     }
 }

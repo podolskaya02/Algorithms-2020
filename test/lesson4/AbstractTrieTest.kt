@@ -109,6 +109,19 @@ abstract class AbstractTrieTest {
             }
             println("All clear!")
         }
+
+        assertFails { create().iterator().next() }
+
+        val trie = create()
+        val list = listOf("one", "two", "three", "four", "five")
+        trie.addAll(list)
+        val iterator = trie.iterator()
+        var i = ""
+        while (iterator.hasNext()) {
+            i = iterator.next()
+            assertTrue(i in list)
+        }
+        assertEquals(i, list.last())
     }
 
     protected fun doIteratorRemoveTest() {
@@ -170,6 +183,20 @@ abstract class AbstractTrieTest {
             }
             println("All clear!")
         }
-    }
+        assertFails { create().iterator().remove() }
 
+        val trie = create()
+        val list = listOf("one", "two", "three", "four", "five")
+        trie.addAll(list)
+        val iterator = trie.iterator()
+        var i: String
+        while (iterator.hasNext()) {
+            i = iterator.next()
+            if (i.contains('o')) iterator.remove()
+        }
+        assertEquals(2, trie.size)
+        assertEquals(list[2], trie.first())
+        assertEquals(list[4], trie.elementAt(1))
+    }
 }
+

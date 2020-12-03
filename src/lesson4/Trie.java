@@ -92,8 +92,50 @@ public class Trie extends AbstractSet<String> implements Set<String> {
     @NotNull
     @Override
     public Iterator<String> iterator() {
-        // TODO
-        throw new NotImplementedError();
+        return  new TrieIterator();
+    }
+
+    public class TrieIterator implements Iterator<String> {
+        private LinkedList<String> list = new LinkedList<>();
+        private String string;
+
+        private TrieIterator() {
+            if (root != null) toLinkedList("", root);
+        }
+
+        void toLinkedList(String string, Node root) {
+            for (char c: root.children.keySet()) {
+                if (c != (char) 0)
+                    toLinkedList(string + c, root.children.get(c));
+                else list.add(string);
+            }
+        }
+
+        @Override
+        // Трудоемкость - О(1) ; Ресурсоемкость - О(1)
+        public boolean hasNext() {
+            return !list.isEmpty();
+        }
+
+        @Override
+        public String next() {
+            // Трудоемкость - О(1) ; Ресурсоемкость - О(1)
+            if (list.isEmpty())
+                throw new IllegalStateException();
+            string = list.pollFirst(); // возвращает и удаляет первый элемент этого списка или возвращает null, если этот список пуст.
+            return string;
+        }
+
+        @Override
+        public void remove() {
+            // Трудоемкость - О(n), n - длина string ; Ресурсоемкость - О(1)
+            if (string == null) throw new IllegalStateException();
+            else {
+                Trie.this.remove(string);
+                string = null;
+            }
+        }
+
     }
 
 }
