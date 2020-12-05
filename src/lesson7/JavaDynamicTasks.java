@@ -18,8 +18,32 @@ public class JavaDynamicTasks {
      * Если есть несколько самых длинных общих подпоследовательностей, вернуть любую из них.
      * При сравнении подстрок, регистр символов *имеет* значение.
      */
+    //Ресурсоемкость О(firstLenght * secondLenght)
+    //Трудоемкость O(firstLenght * secondLenght)
     public static String longestCommonSubSequence(String first, String second) {
-        throw new NotImplementedError();
+        StringBuilder subSequence = new StringBuilder();
+        int firstLenght = first.length();
+        int secondLenght = second.length();
+        int x = 0;
+        int y = 0;
+        int[][] array = new int[firstLenght + 1][secondLenght + 1];
+
+        for (int i = firstLenght - 1; i >= 0; i--) {
+            for (int j = secondLenght - 1; j >= 0; j--) {
+                if (first.charAt(i) == second.charAt(j)) array[i][j] = array[i + 1][j + 1] + 1;
+                else array[i][j] = Math.max(array[i + 1][j], array[i][j + 1]);
+            }
+        }
+
+        while (x < firstLenght && y < secondLenght) {
+            if (first.charAt(x) == second.charAt(y)) {
+                subSequence.append(first.charAt(x));
+                x++;
+                y++;
+            } else if (array[x + 1][y] >= array[x][y + 1]) x++;
+            else y++;
+        }
+        return subSequence.toString();
     }
 
     /**

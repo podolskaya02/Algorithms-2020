@@ -4,6 +4,7 @@ import kotlin.test.assertEquals
 
 abstract class AbstractDynamicTests {
     fun longestCommonSubSequence(longestCommonSubSequence: (String, String) -> String) {
+        assertEquals("здс", longestCommonSubSequence("здравствуй мир", "мы здесь"))
         assertEquals("", longestCommonSubSequence("мой мир", "я"))
         assertEquals("1", longestCommonSubSequence("1", "1"))
         assertEquals("13", longestCommonSubSequence("123", "13"))
@@ -34,6 +35,27 @@ abstract class AbstractDynamicTests {
 Наследник всех своих родных.
                 """.trimIndent()
             ).length, "Answer must have length of $expectedLength2"
+        )
+        assertEquals("", longestCommonSubSequence("So cool", "соотношение"))
+        assertEquals("L EO", longestCommonSubSequence("heLlo evEryOne", "HELLO EVERYONE"))
+        assertEquals(
+            " so hap aseto I nd  friendhere in y hed o gl thts oa caue so ae yore or mrrsnda mg s eeda o ll  aeAn m not scard",
+            longestCommonSubSequence(
+                "We passed upon the stair We spoke of was and when" +
+                        "Although I wasn't there" + "He said I was his friend" + "Which came as a surprise" +
+                        "I spoke into his eyes" + "I thought you died alone" + "A long long time ago" +
+                        "Oh no, not me" + "We never lost control" + "You're face to face" +
+                        "With the man who sold the world" + "I laughed and shook hand" + "And made my way back home" +
+                        "I searched for form and land" + "For years and years I roamed" +
+                        "I gazed a gazeless stare" + "We walked a million hills" +
+                        "I must have died alone" + "A long, long time ago" +
+                        "Who knows?" + "Not me" + "I never lost control" +
+                        "You're face to face" + "With the man who sold the world",
+
+                "I'm so happy 'cause today I found my friends" + "They're in my head" +
+                        "I'm so ugly, that's okay, 'cause so are you" + "Broke our mirrors" +
+                        "Sunday morning is everyday, for all I care" + "And I'm not scared"
+            )
         )
     }
 
