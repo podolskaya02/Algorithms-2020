@@ -3,10 +3,7 @@ package lesson5
 import ru.spbstu.kotlin.generate.util.nextString
 import java.util.*
 import kotlin.math.abs
-import kotlin.test.assertEquals
-import kotlin.test.assertFailsWith
-import kotlin.test.assertFalse
-import kotlin.test.assertTrue
+import kotlin.test.*
 
 abstract class AbstractOpenAddressingSetTest {
 
@@ -74,6 +71,19 @@ abstract class AbstractOpenAddressingSetTest {
                     expectedSize, openAddressingSet.size,
                     "The size of the set is not as expected."
                 )
+                val test = create<Int>(7)
+                test.add(2)
+                test.add(12)
+                test.add(20)
+                test.add(21)
+                test.add(22)
+                test.add(24)
+                test.add(27)
+                test.remove(24)
+                assertEquals(6, test.size)
+                assertTrue(test.remove(21))
+                assertFalse(test.remove("a"))
+                assertFalse(test.remove(21))
             }
         }
     }
@@ -118,6 +128,25 @@ abstract class AbstractOpenAddressingSetTest {
             }
             println("All clear!")
         }
+        val test = create<Int>(7)
+        test.add(2)
+        test.add(12)
+        test.add(20)
+        test.add(21)
+        test.add(22)
+        test.add(24)
+        test.add(27)
+        val iterator = test.iterator()
+        for (i in 0..5) {
+            assertTrue(iterator.hasNext())
+        }
+        assertFalse(iterator.hasNext())
+        test.add(50)
+        test.add(100)
+        test.add(105)
+        assertEquals(50, iterator.next())
+        test.remove(100)
+        assertEquals(105, iterator.next())
     }
 
     protected fun doIteratorRemoveTest() {
@@ -174,6 +203,19 @@ abstract class AbstractOpenAddressingSetTest {
                 )
             }
             println("All clear!")
+        }
+        val test = create<Int>(4)
+        test.add(2)
+        test.add(12)
+        test.add(20)
+        test.add(21)
+        val iterator = test.iterator()
+        var size = 4
+        for (i in 0..3) {
+            iterator.next()
+            iterator.remove()
+            size--
+            assertEquals(test.size, size)
         }
     }
 }
