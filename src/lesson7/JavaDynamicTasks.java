@@ -2,6 +2,7 @@ package lesson7;
 
 import kotlin.NotImplementedError;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @SuppressWarnings("unused")
@@ -58,8 +59,47 @@ public class JavaDynamicTasks {
      * то вернуть ту, в которой числа расположены раньше (приоритет имеют первые числа).
      * В примере ответами являются 2, 8, 9, 12 или 2, 5, 9, 12 -- выбираем первую из них.
      */
+    //Трудоемкость = O(N^2)
+    //Ресурсоемкость = O(N), N = list.size()
     public static List<Integer> longestIncreasingSubSequence(List<Integer> list) {
-        throw new NotImplementedError();
+        int size = list.size();
+        List<Integer> subSequence = new ArrayList<>();
+
+        if (size == 0 || size == 1) return list;
+
+        else if (size == 2) {
+            if (list.get(0) > list.get(1)) {
+                subSequence.add(list.get(0));
+                return subSequence;
+            }
+            else return list;
+        }
+
+        else {
+            int[] prevNumArray = new int[size];
+            int[] lenghtsArray = new int[size];
+            int k = 0;
+            int count = -1;
+            for (int i = 0; i < size; i++) {
+                prevNumArray[i] = -1;
+                lenghtsArray[i] = 0;
+                for (int j = 0; j < i; j++){
+                    if (list.get(j) < list.get(i) && lenghtsArray[j] + 1 > lenghtsArray[i]) {
+                        prevNumArray[i] = j;
+                        lenghtsArray[i] = lenghtsArray[j] + 1;
+                    }
+                }
+                if (lenghtsArray[i] > count) {
+                    count = lenghtsArray[i];
+                    k = i;
+                }
+            }
+            while (k >= 0) {
+                subSequence.add(0, list.get(k));
+                k = prevNumArray[k];
+            }
+        }
+        return subSequence;
     }
 
     /**

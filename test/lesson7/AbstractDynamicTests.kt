@@ -1,6 +1,7 @@
 package lesson7
 
 import kotlin.test.assertEquals
+import kotlin.test.assertFails
 
 abstract class AbstractDynamicTests {
     fun longestCommonSubSequence(longestCommonSubSequence: (String, String) -> String) {
@@ -77,6 +78,16 @@ abstract class AbstractDynamicTests {
                 )
             )
         )
+        assertEquals(
+            listOf(2, 24, 101, 908, 1234, 1235, 1236, 1879, 1880, 1900, 2134, 7888, 8900), longestIncreasingSubSequence(
+                listOf(
+                    1543, 2345, 555, 2, 1254, 24, 1000, 101, 2678, 2346, 0, 3000, 1500, 2345, 1637,
+                    77, 1878, 908, 305, 1234, 1235, 1236, 1879, 1237, 1880, 8000, 1238, 12, 1900,
+                    10000, 23450, 15, 2134, 7888, 8900
+                ),
+            )
+        )
+        assertEquals(listOf(0), longestIncreasingSubSequence(listOf(0, 0, 0, 0, 0, 0, 0, 0)))
     }
 
     fun shortestPathOnField(shortestPathOnField: (String) -> Int) {
