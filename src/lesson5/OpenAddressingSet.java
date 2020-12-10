@@ -1,6 +1,6 @@
 package lesson5;
 
-import org.jetbrains.annotations.NotNull;
+import  org.jetbrains.annotations.NotNull;
 
 import java.util.AbstractSet;
 import java.util.Iterator;
@@ -162,11 +162,11 @@ public class OpenAddressingSet<T> extends AbstractSet<T> {
         @Override
         public void remove() {
             if (current != null && current != deleted) {
-            storage[i - 1] = deleted;
-            size--;
-            count--;
+                storage[i - 1] = deleted;
+                size--;
+                count--;
             }
-            else throw new  IllegalStateException();
+            else throw new IllegalStateException();
         }
     }
 }

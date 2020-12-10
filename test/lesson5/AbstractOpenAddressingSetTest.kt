@@ -129,24 +129,19 @@ abstract class AbstractOpenAddressingSetTest {
             println("All clear!")
         }
         val test = create<Int>(7)
+        val iterator = test.iterator()
+        assertFalse(iterator.hasNext())
         test.add(2)
+        assertEquals(2, iterator.next())
         test.add(12)
+        assertEquals(12, iterator.next())
         test.add(20)
+        assertNotEquals(12, iterator.next())
         test.add(21)
         test.add(22)
-        test.add(24)
-        test.add(27)
-        val iterator = test.iterator()
-        for (i in 0..5) {
-            assertTrue(iterator.hasNext())
-        }
-        assertFalse(iterator.hasNext())
-        test.add(50)
-        test.add(100)
-        test.add(105)
-        assertEquals(50, iterator.next())
-        test.remove(100)
-        assertEquals(105, iterator.next())
+        test.remove(21)
+        assertTrue(iterator.hasNext())
+        assertEquals(22, iterator.next())
     }
 
     protected fun doIteratorRemoveTest() {

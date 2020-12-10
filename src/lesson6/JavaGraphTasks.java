@@ -2,8 +2,7 @@ package lesson6;
 
 import kotlin.NotImplementedError;
 
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 @SuppressWarnings("unused")
 public class JavaGraphTasks {
@@ -65,9 +64,7 @@ public class JavaGraphTasks {
      * |
      * J ------------ K
      */
-    public static Graph minimumSpanningTree(Graph graph) {
-        throw new NotImplementedError();
-    }
+    public static Graph minimumSpanningTree(Graph graph) { throw new NotImplementedError(); }
 
     /**
      * Максимальное независимое множество вершин в графе без циклов.
@@ -95,8 +92,32 @@ public class JavaGraphTasks {
      *
      * Эта задача может быть зачтена за пятый и шестой урок одновременно
      */
+
+    //Трудоемкость = O(количество вершин^2)
+    // Ресурсоемкость = O(количество вершин);
     public static Set<Graph.Vertex> largestIndependentVertexSet(Graph graph) {
-        throw new NotImplementedError();
+        Set<Set<Graph.Vertex>> resultSet = new HashSet<>();
+        Set<Graph.Vertex> maxResult = new HashSet<>();
+        Set<Graph.Vertex> check = new HashSet<>();
+
+        for (Graph.Vertex v1 : graph.getVertices()){
+            Set<Graph.Vertex> vertexSet = new HashSet<>();
+            Set<Graph.Vertex> skipVertexSet = new HashSet<>(); // пропускаем эти вершины
+            for (Graph.Vertex v2 : graph.getVertices()){
+                if (!skipVertexSet.contains(v2) && !graph.getNeighbors(v1).contains(v2)) {
+                    skipVertexSet.addAll(graph.getNeighbors(v2));
+                    vertexSet.add(v2);
+                }
+                if (graph.getNeighbors(v1).size() < 2) continue;
+                if (!check.containsAll(graph.getNeighbors(v1))) check.add(v1); // проверка на цикл
+                else throw new IllegalArgumentException();
+            }
+            resultSet.add(vertexSet);
+        }
+        for (Set<Graph.Vertex> set : resultSet) {
+            if (set.size() > maxResult.size()) maxResult = set;
+        }
+        return maxResult;
     }
 
     /**
@@ -119,8 +140,24 @@ public class JavaGraphTasks {
      *
      * Ответ: A, E, J, K, D, C, H, G, B, F, I
      */
+    //Трудоемкость (количество вершин^2)
+    //Ресурсоемкость (количество вершин)
     public static Path longestSimplePath(Graph graph) {
-        throw new NotImplementedError();
+        Path resultLongestPath = new Path();
+        Deque<Path> paths = new ArrayDeque<>();
+
+        for (Graph.Vertex vertex : graph.getVertices()) paths.push(new Path(vertex));
+
+        while (paths.size() > 0) {
+            Path currentPath = paths.pop();
+            if (currentPath.getLength() > resultLongestPath.getLength()) resultLongestPath = currentPath;
+            Graph.Vertex lastOneVertex = currentPath.getVertices().get(currentPath.getVertices().size() - 1);
+            Set<Graph.Vertex> set = graph.getNeighbors(lastOneVertex); // Соседи последней вершины
+            for (Graph.Vertex vertex : set)
+                if (!currentPath.contains(vertex)) paths.push(new Path(currentPath, graph, vertex));
+        }
+
+        return resultLongestPath;
     }
 
 
