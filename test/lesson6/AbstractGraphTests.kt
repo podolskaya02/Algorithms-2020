@@ -408,7 +408,7 @@ abstract class AbstractGraphTests {
             addConnection(j, i)
         }.build()
         val longestPath4 = test.longestSimplePath()
-        assertEquals(8, longestPath4.length)
+        assertEquals(9, longestPath4.length)
     }
 
     fun baldaSearcher(baldaSearcher: (String, Set<String>) -> Set<String>) {
